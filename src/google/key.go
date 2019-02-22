@@ -3,6 +3,7 @@ package google
 import (
 	"context"
 	"net/http"
+	"os"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -10,10 +11,12 @@ import (
 )
 
 var oauth2Config = &oauth2.Config{
-	ClientID:     "419661903175-ibl4qvtb8rtkhjs30vugj8s70vgiifg6.apps.googleusercontent.com",
-	ClientSecret: "oUM46Ty8v4sfESkPheFU8RR8",
-	RedirectURL:  "https://matthewkappus.github.io/redirect.html",
-	Scopes:       []string{sheets.SpreadsheetsScope, sheets.DriveScope},
+	ClientID:     os.Getenv("GOOGLE_OA2_CLIENT_ID"),
+	ClientSecret: os.Getenv("GOOGLE_OA2_CLIENT_SECRET"),
+	// ClientID:     "419661903175-ibl4qvtb8rtkhjs30vugj8s70vgiifg6.apps.googleusercontent.com",
+	// ClientSecret: "oUM46Ty8v4sfESkPheFU8RR8",
+	RedirectURL: "https://matthewkappus.github.io/redirect.html",
+	Scopes:      []string{sheets.SpreadsheetsScope, sheets.DriveScope},
 	// Scopes:       []string{gc.ClassroomProfileEmailsScope, gc.ClassroomRostersScope, gc.ClassroomCoursesScope},
 	Endpoint: google.Endpoint,
 }

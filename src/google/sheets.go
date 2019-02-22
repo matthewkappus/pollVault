@@ -13,31 +13,30 @@ import (
 
 // Service connects rosters to Google Sheets and Slides
 type Service struct {
-	// session store
 	sheets *sheets.Service
 	drive  *drive.Service
 }
 
-// ListHandler collects specifics
-func (s *Service) ListHandler(w http.ResponseWriter, r *http.Request) {
-	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-	sID := "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
-	readRange := "Class Data!A2:E"
-	resp, err := s.sheets.Spreadsheets.Values.Get(sID, readRange).Do()
-	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet: %v", err)
-	}
 
-	if len(resp.Values) == 0 {
-		fmt.Println("No data found.")
-	} else {
-		fmt.Println("Name, Major:")
-		for _, row := range resp.Values {
-			// Print columns A and E, which correspond to indices 0 and 4.
-			fmt.Fprintf(w, "%s, %s\n", row[0], row[4])
-		}
-	}
-}
+// func (s *Service) listStuff() {
+// 	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+// 	sID := "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
+// 	readRange := "Class Data!A2:E"
+// 	resp, err := s.sheets.Spreadsheets.Values.Get(sID, readRange).Do()
+// 	if err != nil {
+// 		log.Fatalf("Unable to retrieve data from sheet: %v", err)
+// 	}
+
+// 	if len(resp.Values) == 0 {
+// 		fmt.Println("No data found.")
+// 	} else {
+// 		fmt.Println("Name, Major:")
+// 		for _, row := range resp.Values {
+// 			// Print columns A and E, which correspond to indices 0 and 4.
+// 			fmt.Fprintf(w, "%s, %s\n", row[0], row[4])
+// 		}
+// 	}
+// }
 
 // OA2CallbackHandler starts a Google Clasroom Service after exchanging for an oauth2 token
 // It writes  a login object back to the client if using the sesin[sid] key stored on authentication
