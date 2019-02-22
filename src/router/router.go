@@ -17,6 +17,7 @@ type Router struct {
 	roster *store.Roster
 }
 
+
 var cs = sessions.NewCookieStore([]byte(os.Getenv("POLLVAULT_SESSION_KEY")))
 
 const sessionName = "PollVaultSession"
@@ -44,20 +45,6 @@ func (router *Router) getUser(r *http.Request) (string, error) {
 		return "", fmt.Errorf("could not find user in session")
 	}
 	return u, nil
-}
-
-// ListHandler collects specifics
-func (router *Router) ListHandler(w http.ResponseWriter, r *http.Request) {
-	// u, _ := router.getUser(r)
-	classes, err := router.roster.SelectClassesByTeacher("matthew.kappus@aps.edu")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	for _, c := range classes {
-		fmt.Fprintln(w, c.Title)
-	}
 }
 
 // Class struct {

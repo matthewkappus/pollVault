@@ -17,7 +17,6 @@ type Service struct {
 	drive  *drive.Service
 }
 
-
 // func (s *Service) listStuff() {
 // 	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
 // 	sID := "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
@@ -38,34 +37,10 @@ type Service struct {
 // 	}
 // }
 
-// OA2CallbackHandler starts a Google Clasroom Service after exchanging for an oauth2 token
-// It writes  a login object back to the client if using the sesin[sid] key stored on authentication
-func (s *Service) OA2CallbackHandler(w http.ResponseWriter, r *http.Request) {
-
+// StartAPI creates Drive and Sheets services returns an error if a Client can't be created to make service calls
+func (s *Service) StartAPI(w http.ResponseWriter, r *http.Request, t *oauth2.Token) error {
 	ctx := context.Background()
-	token, err := oauth2Config.Exchange(ctx, r.FormValue("code"))
-	if err != nil {
-		http.Error(w, "CallbackHandler: Token echange error error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if err = s.startAPI(w, r, token); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if err = s.setUser(); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	http.Redirect(w, r, "/list", http.StatusTemporaryRedirect)
-}
-
-// an error if a Client can't be created to make service calls
-func (s *Service) startAPI(w http.ResponseWriter, r *http.Request, t *oauth2.Token) error {
-	ctx := context.Background()
-	client := oauth2.NewClient(ctx, oauth2Config.TokenSource(ctx, t))
+	client := oauth2.NewClient(ctx, Oauth2Config.TokenSource(ctx, t))
 	var err error
 	s.sheets, err = sheets.New(client)
 	if err != nil {
