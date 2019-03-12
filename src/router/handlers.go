@@ -7,9 +7,27 @@ import (
 	"net/http"
 
 	"github.com/matthewkappus/pollVault/src/google"
+	"github.com/matthewkappus/pollVault/src/poll"
 )
 
 var tmpl = template.Must(template.ParseGlob("tmpl/*.tmpl.html"))
+
+// CreateBallot sends post request to service for Sheet creation or renders question form
+// After a ballot is created, a webosket route receives respones by created id
+func (router *Router) CreateBallot(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		r.ParseForm()
+		class, err := router.roster.SelectClassByID(r.FormValue("class_id"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		ballot := poll.New(class).AddAnswers(r.FormValue("correct"), "incorrect1", "incorrect2")
+		// todo: err := router.svc.MakePollSheet(ballot)
+
+		router.PollBallotHandler(w, r, ballot)
+	}
+}
 
 // ListHandler collects specifics
 func (router *Router) ListHandler(w http.ResponseWriter, r *http.Request) {

@@ -47,10 +47,3 @@ func (router *Router) getUser(r *http.Request) (string, error) {
 	return u, nil
 }
 
-// Class struct {
-// 	ID       string  `json:"id,omitempty"`
-// 	Title    string  `json:"title,omitempty"`
-// 	Per      string  `json:"per,omitempty"`
-// 	Teacher  string  `json:"teacher,omitempty"`
-// 	Students Stu415s `json:"students,omitempty"`
-// }
